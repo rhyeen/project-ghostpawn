@@ -1,0 +1,21 @@
+{
+  "name": "Project Ghostpawn",
+  "short_name": "Project Ghostpawn",
+  "description": "Project Ghostpawn",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#80CBC4",
+  "background_color": "#80CBC4",
+  "icons": [
+    {
+      "src": "images/manifest/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "images/manifest/icon-310x310.png",
+      "sizes": "310x310",
+      "type": "image/png"
+    }
+  ]
+}
