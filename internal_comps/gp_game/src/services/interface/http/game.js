@@ -1,6 +1,6 @@
 import { Http } from '../../../../../gp_shared/src/services/http.js';
 
-export const beginGame = () => {
+export const beginGame = (playerId) => {
   return Http.post('game/begin');
 }
 

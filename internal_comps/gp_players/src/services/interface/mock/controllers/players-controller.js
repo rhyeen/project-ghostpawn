@@ -6,6 +6,12 @@ export const initializePlayers = () => {
   initializeModel();
 };
 
+export const addPlayer = (playerId) => {
+  Model.players[playerId] = {
+    playerCode: 'W1'
+  };
+};
+
 export const syncPiecesToPlayers = () => {
   resetPlayerPieces();
   let board = BoardModel.Model.board;
@@ -30,3 +36,20 @@ export const syncPiecesToPlayers = () => {
     }
   }
 };
+
+export const getPlayerPieces = (playerId) => {
+  let playerCode = _getPlayerCode(playerId);
+  if (isPlayerCodeWhiteTeam(playerCode)) {
+    return _deepCopy(Model.teams.white[playerCode].pieces);
+  } else {
+    return _deepCopy(Model.teams.black[playerCode].pieces);
+  }
+};
+
+function _getPlayerCode(playerId) {
+  return Model.players[playerId].playerCode;
+}
+
+function _deepCopy(arr) {
+  return JSON.parse(JSON.stringify(arr));
+}

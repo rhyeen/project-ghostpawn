@@ -6,12 +6,12 @@ import {
 import * as CallHttp from './http/game.js';
 import * as CallMock from './mock/game.js';
 
-export const beginGame = () => {
+export const beginGame = (playerId) => {
   switch (interfaceState()) {
     case INTERFACE.HTTP:
-      return CallHttp.beginGame();
+      return CallHttp.beginGame(playerId);
     case INTERFACE.MOCK:
-      return CallMock.beginGame();
+      return CallMock.beginGame(playerId);
     default:
       return invalidInterfaceState();
   }
@@ -28,12 +28,12 @@ export const endTurn = (turn) => {
   }
 };
 
-export const beginTurn = () => {
+export const beginTurn = (playerId) => {
   switch (interfaceState()) {
     case INTERFACE.HTTP:
-      return CallHttp.beginTurn();
+      return CallHttp.beginTurn(playerId);
     case INTERFACE.MOCK:
-      return CallMock.beginTurn();
+      return CallMock.beginTurn(playerId);
     default:
       return invalidInterfaceState();
   }

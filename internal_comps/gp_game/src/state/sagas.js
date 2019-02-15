@@ -5,15 +5,19 @@ import { localStore } from './store.js';
 
 import * as Actions from './actions.js';
 import { GAME_STATES } from '../entities/game-states.js';
+import * as BoardActions from '../../../gp_board/src/state/actions.js';
+
+const PLAYER_ID = 'testPlayer';
 
 function* _beginTurn() {
-  let { gameState } = yield call(GameInterface.beginTurn);
+  let { gameState, gameEntities } = yield call(GameInterface.beginTurn, PLAYER_ID);
   yield _setGameState(gameState);
+  yield _setGameEntities(gameEntities);
   yield put(Actions.beginTurn.success());
 }
 
 function* _resetGame() {
-  yield call(GameInterface.beginGame);
+  yield call(GameInterface.beginGame, PLAYER_ID);
   yield put(Actions.beginTurn.request());
   yield put(Actions.resetGame.success());
 }
@@ -27,6 +31,11 @@ function* _setGameState(gameState) {
       yield put(Actions.winGame.request());
       return;
   }
+}
+
+function* _setGameEntities(gameEntities) {
+  yield put(BoardActions.setReducedBoard(gameEntities.reducedBoard));
+  yield put(BoardActions.setPlayerPieces(gameEntities.playerPieces));
 }
 
 function* _winGame() {

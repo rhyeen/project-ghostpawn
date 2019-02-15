@@ -4,10 +4,10 @@ import {
 
 import * as GameController from './controllers/game-controller.js';
 
-export const beginGame = () => {
+export const beginGame = (playerId) => {
   return new Promise((resolve) => {
-    Mock.debugRequest(beginGame);
-    GameController.initializeGame();
+    Mock.debugRequest(beginGame, playerId);
+    GameController.initializeGame(playerId);
     setTimeout(() => {
       Mock.debugSuccessfulResponse(beginGame);
       resolve();
@@ -26,12 +26,12 @@ export const endTurn = (turn) => {
   });
 };
 
-export const beginTurn = () => {
+export const beginTurn = (playerId) => {
   return new Promise((resolve) => {
-    Mock.debugRequest(beginTurn);
+    Mock.debugRequest(beginTurn, playerId);
     setTimeout(() => {
       let response = {
-        gameEntities: GameController.getGameEntities(),
+        gameEntities: GameController.getGameEntities(playerId),
         gameState: GameController.getGameState()
       };
       Mock.debugSuccessfulResponse(beginTurn, response);

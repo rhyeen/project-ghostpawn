@@ -2,6 +2,8 @@ import { html, LitElement } from '@polymer/lit-element';
 import { GpSharedStyles } from '../../../../gp_shared/src/entities/gp-shared-styles.js';
 import { GpGameStyles, NAV } from '../../entities/gp_game-styles.js';
 
+import '../../../../gp_board/src/components/gameboard/gp-gameboard.js';
+
 export class GpGameView extends LitElement {
   render() {
     return html`

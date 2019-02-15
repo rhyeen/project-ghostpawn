@@ -8,7 +8,8 @@ function _getInitialModel() {
     teams: {
       white: _getEmptyPlayers(GAME_KEYWORDS.WHITE_TEAM),
       black: _getEmptyPlayers(GAME_KEYWORDS.BLACK_TEAM)
-    }
+    },
+    players: {}
   };
 }
 
@@ -43,6 +44,7 @@ function _getEmptyPlayerPieces() {
 export function initializeModel() {
   let model = _getInitialModel();
   Model.teams = model.teams;
+  Model.players = model.players;
 }
 
 
