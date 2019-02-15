@@ -1,10 +1,13 @@
 import { initializeModel, recordPlayerTurn } from '../models/model.js';
 import * as TurnActionController from './turn-action-controller.js';
 import { GAME_STATES } from '../../../../entities/game-states.js';
+import * as BoardController from '../../../../../../gp_board/src/services/interface/mock/controllers/board-controller.js';
+import * as PlayersController from '../../../../../../gp_players/src/services/interface/mock/controllers/players-controller.js';
 
 export const initializeGame = () => {
-  // BoardController.initializeBoard();
-  // PlayersController.initializePlayers();
+  BoardController.initializeBoard();
+  PlayersController.initializePlayers();
+  PlayersController.syncPiecesToPlayers();
   initializeModel();
 };
 
@@ -19,7 +22,9 @@ export const getGameState = () => {
 }
 
 export const getGameEntities = () => {
-  return {};
+  return {
+    reducedBoard: BoardController.getReducedBoard()
+  };
 }
 
 function _gameIsLost() {
