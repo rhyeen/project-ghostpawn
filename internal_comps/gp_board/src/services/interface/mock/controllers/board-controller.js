@@ -19,14 +19,14 @@ export const getReducedBoard = () => {
 
 function _getReducedBoardCell(cell) {
   let reducedCell = {
-    team: _getBoardCellTeam(cell),
-    pawn: 0,
-    rook: 0,
-    bishop: 0,
-    knight: 0,
-    queen: 0,
-    king: 0
+    team: _getBoardCellTeam(cell)
   };
+  reducedCell[GAME_KEYWORDS.PAWN] = 0;
+  reducedCell[GAME_KEYWORDS.ROOK] = 0;
+  reducedCell[GAME_KEYWORDS.KNIGHT] = 0;
+  reducedCell[GAME_KEYWORDS.BISHOP] = 0;
+  reducedCell[GAME_KEYWORDS.QUEEN] = 0;
+  reducedCell[GAME_KEYWORDS.KING] = 0;
   if (!reducedCell.team) {
     return reducedCell;
   }

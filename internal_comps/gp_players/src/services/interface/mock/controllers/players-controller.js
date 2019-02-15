@@ -22,13 +22,13 @@ export const syncPiecesToPlayers = () => {
         for (let playerCode of board[i][j][piece]) {
           if (isPlayerCodeWhiteTeam(playerCode)) {
             Model.teams.white[playerCode].pieces[piece].push({
-              x: i,
-              y: j
+              y: i,
+              x: j
             });
           } else {
             Model.teams.black[playerCode].pieces[piece].push({
-              x: i,
-              y: j
+              y: i,
+              x: j
             });
           }
         }

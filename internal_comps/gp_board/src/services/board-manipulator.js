@@ -9,7 +9,7 @@ export function getCombinedBoard(reducedBoard, playerPieces) {
   let combinedBoard = shallowCopyBoard(reducedBoard);
   for (let pieceType of pieceTypes) {
     for (let piece of playerPieces[pieceType]) {
-      combinedBoard[piece.x][piece.y].playerPiece = pieceType;
+      combinedBoard[piece.y][piece.x].playerPiece = pieceType;
     }
   }
   return combinedBoard;

@@ -2,7 +2,13 @@ export const GAME_KEYWORDS = {
   WHITE_TEAM: 'WHITE',
   BLACK_TEAM: 'BLACK',
   WHITE_TEAM_CODE: 'W',
-  BLACK_TEAM_CODE: 'B'
+  BLACK_TEAM_CODE: 'B',
+  PAWN: 'pawn',
+  ROOK: 'rook',
+  KNIGHT: 'knight',
+  BISHOP: 'bishop',
+  QUEEN: 'queen',
+  KING: 'king'
 }
 
 export function getTeamPlayerCode(team, playerIndex) {

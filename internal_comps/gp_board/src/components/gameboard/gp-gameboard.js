@@ -16,7 +16,7 @@ export class GpGameboard extends connect(localStore)(LitElement) {
       ${GpSharedStyles}
       <style>
         :host {
-          border: 8px solid #222;
+          border: 8px solid #6d4c41;
         }
 
         [board-row] {
@@ -30,6 +30,7 @@ export class GpGameboard extends connect(localStore)(LitElement) {
   static get properties() { 
     return {
       _combinedBoard: { type: Array },
+      _selectedCell: { type: Object },
       _validMoves: { type: Array }
     }
   }
@@ -39,19 +40,34 @@ export class GpGameboard extends connect(localStore)(LitElement) {
   }
 
   _getBoardRowHtml(boardRow, boardRowIndex) {
-    return boardRow.map((boardCell, boardCellIndex) => html`<gp-board-cell .cell="${boardCell}" .cellX="${boardRowIndex}" .cellY="${boardCellIndex}" ?showValidMove="${this._isInValidMoves(boardRowIndex, boardCellIndex)}" @click="${() => this._handleCellClick(boardCell, boardRowIndex, boardCellIndex)}"></gp-board-cell>`);
+    return boardRow.map((boardCell, boardCellIndex) => {
+      return html`
+        <gp-board-cell
+            .cell="${boardCell}"
+            .cellY="${boardRowIndex}"
+            .cellX="${boardCellIndex}"
+            ?showValidMove="${this._isInValidMoves(boardRowIndex, boardCellIndex)}"
+            ?isSelected="${this._isSelected(boardRowIndex, boardCellIndex)}"
+            @click="${() => this._handleCellClick(boardCell, boardRowIndex, boardCellIndex)}"></gp-board-cell>`
+    });
   }
 
-  _handleCellClick(cell, x, y) {
+  _handleCellClick(cell, y, x) {
     if (!cell.playerPiece) {
+      this._selectedCell = {};
       this._validMoves = [];
       return;
     }
+    this._selectedCell = { x, y };
     // @DEBUG: get player team dynamically.
     this._validMoves = getValidMoves(GAME_KEYWORDS.WHITE_TEAM, cell.playerPiece, x, y, this._combinedBoard);
   }
 
-  _isInValidMoves(x, y) {
+  _isSelected(y, x) {
+    return this._selectedCell && this._selectedCell.x === x && this._selectedCell.y === y;
+  }
+
+  _isInValidMoves(y, x) {
     if (!this._validMoves) {
       return false;
     }

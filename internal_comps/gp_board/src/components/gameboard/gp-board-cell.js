@@ -12,8 +12,9 @@ export class GpBoardCell extends LitElement {
       <style>
         :host {
           display: flex;
-          width: 34px;
-          height: 34px;
+          width: 30px;
+          height: 30px;
+          border: 2px solid ${this._getBorderColor()};
           align-items: center;
           justify-content: center;
           background-color: ${this._getBackgroundColor()};
@@ -44,7 +45,8 @@ export class GpBoardCell extends LitElement {
       cell: { type: Object },
       cellX: { type: Number },
       cellY: { type: Number },
-      showValidMove: { type: Boolean }
+      showValidMove: { type: Boolean },
+      isSelected: { type: Boolean }
     }
   }
 
@@ -60,18 +62,18 @@ export class GpBoardCell extends LitElement {
   _getCellPieceHtml(piece, pieceTypeIndex, totalPieceTypes, totalPieces) {
     let opacity = piece.count / totalPieces;
     switch (piece.type) {
-      case 'pawn':
-        return this._getCellIcon(opacity, PawnIcon, this.cell.playerPiece === 'pawn');
-      case 'knight':
-        return this._getCellIcon(opacity, KnightIcon, this.cell.playerPiece === 'knight');
-      case 'rook':
-        return this._getCellIcon(opacity, RookIcon, this.cell.playerPiece === 'rook');
-      case 'bishop':
-        return this._getCellIcon(opacity, BishopIcon, this.cell.playerPiece === 'bishop');
-      case 'king':
-        return this._getCellIcon(opacity, KingIcon, this.cell.playerPiece === 'king');
-      case 'queen':
-        return this._getCellIcon(opacity, QueenIcon, this.cell.playerPiece === 'queen');
+      case GAME_KEYWORDS.PAWN:
+        return this._getCellIcon(opacity, PawnIcon, this.cell.playerPiece === GAME_KEYWORDS.PAWN);
+      case GAME_KEYWORDS.KNIGHT:
+        return this._getCellIcon(opacity, KnightIcon, this.cell.playerPiece === GAME_KEYWORDS.KNIGHT);
+      case GAME_KEYWORDS.ROOK:
+        return this._getCellIcon(opacity, RookIcon, this.cell.playerPiece === GAME_KEYWORDS.ROOK);
+      case GAME_KEYWORDS.BISHOP:
+        return this._getCellIcon(opacity, BishopIcon, this.cell.playerPiece === GAME_KEYWORDS.BISHOP);
+      case GAME_KEYWORDS.KING:
+        return this._getCellIcon(opacity, KingIcon, this.cell.playerPiece === GAME_KEYWORDS.KING);
+      case GAME_KEYWORDS.QUEEN:
+        return this._getCellIcon(opacity, QueenIcon, this.cell.playerPiece === GAME_KEYWORDS.QUEEN);
       default:
         Log.error(`unexpected piece type: ${piece.type}`);
         return html``;
@@ -84,38 +86,85 @@ export class GpBoardCell extends LitElement {
     if (isPlayerPieceClass) {
       opacity = 1;
     }
-    return html`<div style="opacity: ${opacity};" board-cell>${iconFunction([teamClass, isPlayerPieceClass].join(' '))}</div>`;
+    return html`
+      <div
+        style="opacity: ${opacity};"
+        board-cell>${iconFunction([teamClass, isPlayerPieceClass].join(' '))}</div>`;
   }
 
   _getTotalPiecesOnCell() {
-    return this.cell.pawn + this.cell.rook + this.cell.bishop + this.cell.knight + this.cell.queen + this.cell.king;
+    return (
+      this.cell[GAME_KEYWORDS.PAWN] + 
+      this.cell[GAME_KEYWORDS.ROOK] + 
+      this.cell[GAME_KEYWORDS.BISHOP] + 
+      this.cell[GAME_KEYWORDS.KNIGHT] + 
+      this.cell[GAME_KEYWORDS.QUEEN] + 
+      this.cell[GAME_KEYWORDS.KING]
+    );
   }
 
   _getPiecesOnCell() {
     let piecesOnCell = [];
-    if (this.cell.pawn > 0) {
-      piecesOnCell.push({type: 'pawn', count: this.cell.pawn});
+    if (this.cell[GAME_KEYWORDS.PAWN] > 0) {
+      piecesOnCell.push({type: GAME_KEYWORDS.PAWN, count: this.cell[GAME_KEYWORDS.PAWN]});
     }
-    if (this.cell.rook > 0) {
-      piecesOnCell.push({type: 'rook', count: this.cell.rook});
+    if (this.cell[GAME_KEYWORDS.ROOK] > 0) {
+      piecesOnCell.push({type: GAME_KEYWORDS.ROOK, count: this.cell[GAME_KEYWORDS.ROOK]});
     }
-    if (this.cell.bishop > 0) {
-      piecesOnCell.push({type: 'bishop', count: this.cell.bishop});
+    if (this.cell[GAME_KEYWORDS.BISHOP] > 0) {
+      piecesOnCell.push({type: GAME_KEYWORDS.BISHOP, count: this.cell[GAME_KEYWORDS.BISHOP]});
     }
-    if (this.cell.knight > 0) {
-      piecesOnCell.push({type: 'knight', count: this.cell.knight});
+    if (this.cell[GAME_KEYWORDS.KNIGHT] > 0) {
+      piecesOnCell.push({type: GAME_KEYWORDS.KNIGHT, count: this.cell[GAME_KEYWORDS.KNIGHT]});
     }
-    if (this.cell.queen > 0) {
-      piecesOnCell.push({type: 'queen', count: this.cell.queen});
+    if (this.cell[GAME_KEYWORDS.QUEEN] > 0) {
+      piecesOnCell.push({type: GAME_KEYWORDS.QUEEN, count: this.cell[GAME_KEYWORDS.QUEEN]});
     }
-    if (this.cell.king > 0) {
-      piecesOnCell.push({type: 'king', count: this.cell.king});
+    if (this.cell[GAME_KEYWORDS.KING] > 0) {
+      piecesOnCell.push({type: GAME_KEYWORDS.KING, count: this.cell[GAME_KEYWORDS.KING]});
     }
     return piecesOnCell;
   }
 
   _getBackgroundColor() {
-    return (this.cellX + this.cellY) % 2 === 0 ? '#FFF' : '#222';
+    // if (this._isWhiteCell()) {
+    //   if (this.showValidMove) {
+    //     return '#f0f4c3';
+    //   }
+    //   if (this.isSelected) {
+    //     return '#a1887f';
+    //   }
+    //   return '#FFF';
+    // }
+    // if (this.showValidMove) {
+    //   return '#524c00';
+    // }
+    // if (this.isSelected) {
+    //   return '#5d4037';
+    // }
+    // return '#222';
+    if (this.showValidMove) {
+      return this._isWhiteCell() ? '#7f0000' : '#ffcdd2';
+    }
+    if (this.isSelected) {
+      return this._isWhiteCell() ? '#006064' : '#b2ebf2';
+    }
+    return this._isWhiteCell() ? '#FFF' : '#222';
+  }
+
+  _getBorderColor() {
+
+    if (this.showValidMove) {
+      return this._isWhiteCell() ? '#ffcdd2' : '#7f0000';
+    }
+    if (this.isSelected) {
+      return this._isWhiteCell() ? '#b2ebf2' : '#006064';
+    }
+    return this._isWhiteCell() ? '#FFF' : '#222';
+  }
+
+  _isWhiteCell() {
+    return (this.cellX + this.cellY) % 2 === 0;
   }
 }
 

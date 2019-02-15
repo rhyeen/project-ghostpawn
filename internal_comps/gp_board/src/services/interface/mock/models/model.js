@@ -20,14 +20,14 @@ function _getInitialModel() {
 
 function _getCastleBoardRow(team) {
   let boardRow = _getEmptyBoardRow();
-  boardRow[0].rook = _getInitialTeamPieces(team);
-  boardRow[1].knight = _getInitialTeamPieces(team);
-  boardRow[2].bishop = _getInitialTeamPieces(team);
-  boardRow[3].queen = _getInitialTeamPieces(team);
-  boardRow[4].king = _getInitialTeamPieces(team);
-  boardRow[5].bishop = _getInitialTeamPieces(team);
-  boardRow[6].knight = _getInitialTeamPieces(team);
-  boardRow[7].rook = _getInitialTeamPieces(team);
+  boardRow[0][GAME_KEYWORDS.ROOK] = _getInitialTeamPieces(team);
+  boardRow[1][GAME_KEYWORDS.KNIGHT] = _getInitialTeamPieces(team);
+  boardRow[2][GAME_KEYWORDS.BISHOP] = _getInitialTeamPieces(team);
+  boardRow[3][GAME_KEYWORDS.QUEEN] = _getInitialTeamPieces(team);
+  boardRow[4][GAME_KEYWORDS.KING] = _getInitialTeamPieces(team);
+  boardRow[5][GAME_KEYWORDS.BISHOP] = _getInitialTeamPieces(team);
+  boardRow[6][GAME_KEYWORDS.KNIGHT] = _getInitialTeamPieces(team);
+  boardRow[7][GAME_KEYWORDS.ROOK] = _getInitialTeamPieces(team);
   return boardRow;
 }
 
@@ -42,7 +42,7 @@ function _getInitialTeamPieces(team) {
 function _getPawnsBoardRow(team) {
   let boardRow = _getEmptyBoardRow();
   for (let i = 0; i < boardRow.length; i++) {
-    boardRow[i].pawn = _getInitialTeamPieces(team);
+    boardRow[i][GAME_KEYWORDS.PAWN] = _getInitialTeamPieces(team);
   }
   return boardRow;
 } 
@@ -56,14 +56,14 @@ function _getEmptyBoardRow() {
 }
 
 function _getEmptyBoardCell() {
-  return {
-    pawn: new Set(),
-    rook: new Set(),
-    bishop: new Set(),
-    knight: new Set(),
-    queen: new Set(),
-    king: new Set()
-  };
+  let cell = {};
+  cell[GAME_KEYWORDS.PAWN] = new Set()
+  cell[GAME_KEYWORDS.ROOK] = new Set()
+  cell[GAME_KEYWORDS.KNIGHT] = new Set()
+  cell[GAME_KEYWORDS.BISHOP] = new Set()
+  cell[GAME_KEYWORDS.QUEEN] = new Set()
+  cell[GAME_KEYWORDS.KING] = new Set()
+  return cell;
 }
 
 export function initializeModel() {

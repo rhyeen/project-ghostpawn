@@ -31,14 +31,14 @@ function _getEmptyPlayers(team) {
 }
 
 function _getEmptyPlayerPieces() {
-  return {
-    pawn: [],
-    rook: [],
-    bishop: [],
-    knight: [],
-    queen: [],
-    king: []
-  };
+  let emptyPlayerPieces = {};
+  emptyPlayerPieces[GAME_KEYWORDS.PAWN] = [];
+  emptyPlayerPieces[GAME_KEYWORDS.ROOK] = [];
+  emptyPlayerPieces[GAME_KEYWORDS.KNIGHT] = [];
+  emptyPlayerPieces[GAME_KEYWORDS.BISHOP] = [];
+  emptyPlayerPieces[GAME_KEYWORDS.QUEEN] = [];
+  emptyPlayerPieces[GAME_KEYWORDS.KING] = [];
+  return emptyPlayerPieces;
 }
 
 export function initializeModel() {
