@@ -16,8 +16,7 @@ export class GpGameboard extends connect(localStore)(LitElement) {
       ${GpSharedStyles}
       <style>
         :host {
-          border: 16px solid #222;
-          margin: 20px;
+          border: 8px solid #222;
         }
 
         [board-row] {

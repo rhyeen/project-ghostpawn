@@ -8,8 +8,8 @@ export class GpBoardCell extends LitElement {
       <style>
         :host {
           display: flex;
-          width: 40px;
-          height: 40px;
+          width: 34px;
+          height: 34px;
           align-items: center;
           justify-content: center;
           background-color: ${this._getBackgroundColor()};
