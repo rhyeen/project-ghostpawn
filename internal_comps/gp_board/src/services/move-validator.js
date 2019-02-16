@@ -204,7 +204,7 @@ function _checkCollision(targetX, targetY, pieceX, pieceY, moves, board) {
 
 function _addIfMoveOnBoard(x, y, moves) {
   if (_onBoard(x, y)) {
-      moves.push({ x: x, y: y });
+      moves.push({ x, y });
   }
 }
 
