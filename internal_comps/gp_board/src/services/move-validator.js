@@ -50,35 +50,36 @@ function _getMoves(pieceTeam, pieceType, pieceX, pieceY, board) {
 
 // @TODO: ADD pawn attack
 function _pawnMoves(pieceTeam, pieceX, pieceY, board) {
-  var moves = [];
-  if(pieceTeam == GAME_KEYWORDS.WHITE_TEAM) {
+  let moves = [];
+  if (pieceTeam === GAME_KEYWORDS.WHITE_TEAM) {
     _addIfMoveOnBoard(pieceX, pieceY - 1, pieceX, pieceY, moves);
-    if(pieceY == 6) {
-      moves.push({ x: pieceX, y: pieceY - 2});
+    if (pieceY === 6) {
+      moves.push({ x: pieceX, y: pieceY - 2 });
     }
-  }
-  else if(pieceTeam == GAME_KEYWORDS.BLACK_TEAM) {
+  } else {
     _addIfMoveOnBoard(pieceX, pieceY + 1, pieceX, pieceY, moves);
-    if(pieceY == 1) {
-      moves.push({ x: pieceX, y: pieceY + 2});
+    if (pieceY === 1) {
+      moves.push({ x: pieceX, y: pieceY + 2 });
     }
   }
-  // _pawnAttack(pieceTeam, pieceX, pieceY, moves, board);
+  _pawnAttack(pieceTeam, pieceX, pieceY, moves, board);
   return moves;
 }
 
+// @TODO FINISH
 function _pawnAttack(pieceTeam, pieceX, pieceY, moves, board) {
-  if(pieceTeam == GAME_KEYWORDS.WHITE_TEAM) {
-    board[0][0].playerPiece;
-  }
-  else if(pieceTeam == GAME_KEYWORDS.BLACK_TEAM) {
+  if (pieceTeam === GAME_KEYWORDS.WHITE_TEAM) {
+    debugger;
+    let playPiece = board[6][0].playerPiece;
+    console.log(playPiece);
+  } else {
 
   }
 }
 
 function _rookMoves(pieceTeam, pieceX, pieceY, board) {
-  var moves = [];
-  for(var i = 0; i < 8; i++) {
+  let moves = [];
+  for (let i = 0; i < 8; i++) {
     _addIfMoveOnBoard(i, pieceY, pieceX, pieceY, moves);
     _addIfMoveOnBoard(pieceX, i, pieceX, pieceY, moves);
   }
@@ -86,12 +87,12 @@ function _rookMoves(pieceTeam, pieceX, pieceY, board) {
 }
 
 function _knightMoves(pieceTeam, pieceX, pieceY, board) {
-  var moves = [];
-  var one = 1;
-  var two = 2;
-  for(var i = 1; i <= 4; i++) {
+  let moves = [];
+  let one = 1;
+  let two = 2;
+  for (let i = 1; i <= 4; i++) {
     one *= -1;
-    if(i > 2) {
+    if (i > 2) {
       two = -2;
     }
     _addIfMoveOnBoard(pieceX + one, pieceY + two, pieceX, pieceY, moves);
@@ -101,11 +102,11 @@ function _knightMoves(pieceTeam, pieceX, pieceY, board) {
 }
 
 function _bishopMoves(pieceTeam, pieceX, pieceY, board) {
-  var moves = [];
-  var right = 7 - pieceX;
-  var left = pieceX;
-  var step = 0;
-  while(left > 0) {
+  let moves = [];
+  let right = 7 - pieceX;
+  let left = pieceX;
+  let step = 0;
+  while (left > 0) {
     left--;
     step++;
     // NW diagonal
@@ -114,7 +115,7 @@ function _bishopMoves(pieceTeam, pieceX, pieceY, board) {
     _addIfMoveOnBoard(pieceX - step, pieceY + step, pieceX, pieceY, moves);
   }
   step = 0;
-  while(right > 0) {
+  while (right > 0) {
     right--;
     step++;
     // NE diagonal
@@ -126,16 +127,16 @@ function _bishopMoves(pieceTeam, pieceX, pieceY, board) {
 }
 
 function _queenMoves(pieceTeam, pieceX, pieceY, board) {
-  var moves = _rookMoves(pieceTeam, pieceX, pieceY, board);
+  let moves = _rookMoves(pieceTeam, pieceX, pieceY, board);
   moves = moves.concat(_bishopMoves(pieceTeam, pieceX, pieceY, board));
   return moves;
 }
 
 // @TODO: ADD king/rook swap
 function _kingMoves(pieceTeam, pieceX, pieceY, board) {
-  var moves = [];
-  for(var i = pieceX - 1; i <= pieceX + 1; i++) {
-    for(var j = pieceY - 1; j <= pieceY + 1; j++) {
+  let moves = [];
+  for (let i = pieceX - 1; i <= pieceX + 1; i++) {
+    for (let j = pieceY - 1; j <= pieceY + 1; j++) {
       _addIfMoveOnBoard(i, j, pieceX, pieceY, moves);
     }
   }
@@ -143,9 +144,9 @@ function _kingMoves(pieceTeam, pieceX, pieceY, board) {
 }
 
 function _addIfMoveOnBoard(x, y, pieceX, pieceY, moves) {
-  if((x >= 0 && x <= 7) && (y >= 0 && y <= 7)) {
-    if(x != pieceX || y != pieceY) {
-      moves.push({ x: x, y: y});
+  if ((x >= 0 && x <= 7) && (y >= 0 && y <= 7)) {
+    if (x != pieceX || y != pieceY) {
+      moves.push({ x: x, y: y });
     }
   }
 }
