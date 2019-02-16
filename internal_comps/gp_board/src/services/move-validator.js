@@ -26,67 +26,95 @@ import { SET_PLAYER_PIECES } from "../state/actions";
     ...
   ]
 */
-export function getValidMoves(pieceTeam, pieceType, pieceX, pieceY, board) {
-  return _getMoves(pieceTeam, pieceType, pieceX, pieceY, board);
-}
-
+// @TODO: REMOVE pieceTeam (confirm)
 // @TODO: ADD stop when hits piece
-function _getMoves(pieceTeam, pieceType, pieceX, pieceY, board) {
+export function getValidMoves(pieceTeam, pieceType, pieceX, pieceY, board) {
   switch(pieceType) {
     case GAME_KEYWORDS.PAWN:
-      return _pawnMoves(pieceTeam, pieceX, pieceY, board);
+      return _pawnMoves(pieceX, pieceY, board);
     case GAME_KEYWORDS.ROOK:
-      return _rookMoves(pieceTeam, pieceX, pieceY, board);
+      return _rookMoves(pieceX, pieceY, board);
     case GAME_KEYWORDS.KNIGHT:
-      return _knightMoves(pieceTeam, pieceX, pieceY, board);
+      return _knightMoves(pieceX, pieceY, board);
     case GAME_KEYWORDS.BISHOP:
-      return _bishopMoves(pieceTeam, pieceX, pieceY, board);
+      return _bishopMoves(pieceX, pieceY, board);
     case GAME_KEYWORDS.QUEEN:
-      return _queenMoves(pieceTeam, pieceX, pieceY, board);
+      return _queenMoves(pieceX, pieceY, board);
     case GAME_KEYWORDS.KING:
-      return _kingMoves(pieceTeam, pieceX, pieceY, board);
+      return _kingMoves(pieceX, pieceY, board);
   }
 }
 
-// @TODO: ADD pawn attack
-function _pawnMoves(pieceTeam, pieceX, pieceY, board) {
+function _pawnMoves(pieceX, pieceY, board) {
   let moves = [];
-  if (pieceTeam === GAME_KEYWORDS.WHITE_TEAM) {
-    _addIfMoveOnBoard(pieceX, pieceY - 1, pieceX, pieceY, moves);
+  if (_getPieceTeam(pieceX, pieceY, board) === GAME_KEYWORDS.WHITE_TEAM) {
+    _checkCollision(pieceX, pieceY - 1, pieceX, pieceY, moves, board);
     if (pieceY === 6) {
       moves.push({ x: pieceX, y: pieceY - 2 });
     }
   } else {
-    _addIfMoveOnBoard(pieceX, pieceY + 1, pieceX, pieceY, moves);
+    _checkCollision(pieceX, pieceY + 1, pieceX, pieceY, moves, board);
     if (pieceY === 1) {
       moves.push({ x: pieceX, y: pieceY + 2 });
     }
   }
-  _pawnAttack(pieceTeam, pieceX, pieceY, moves, board);
+  _pawnAttack(pieceX, pieceY, moves, board);
   return moves;
 }
 
-// @TODO FINISH
-function _pawnAttack(pieceTeam, pieceX, pieceY, moves, board) {
-  if (pieceTeam === GAME_KEYWORDS.WHITE_TEAM) {
-    debugger;
-    let playPiece = board[6][0].playerPiece;
-    console.log(playPiece);
+// @TODO TEST
+function _pawnAttack(pieceX, pieceY, moves, board) {
+  if (_getPieceTeam(pieceX, pieceY, board) === GAME_KEYWORDS.WHITE_TEAM) {
+    if (_getPieceTeam(pieceX - 1, pieceY - 1, board) === GAME_KEYWORDS.BLACK_TEAM) {
+      _addIfMoveOnBoard(pieceX - 1, pieceY - 1, board);
+    }
+    if (_getPieceTeam(pieceX + 1, pieceY - 1, board) === GAME_KEYWORDS.BLACK_TEAM) {
+      _addIfMoveOnBoard(pieceX + 1, pieceY + 1, board);
+    }
   } else {
-
+    if (_getPieceTeam(pieceX - 1, pieceY + 1, board) === GAME_KEYWORDS.WHITE_TEAM) {
+      _addIfMoveOnBoard(pieceX - 1, pieceY + 1, board);
+    }
+    if (_getPieceTeam(pieceX + 1, pieceY + 1, board) === GAME_KEYWORDS.WHITE_TEAM) {
+      _addIfMoveOnBoard(pieceX + 1, pieceY + 1, board);
+    }
   }
 }
 
-function _rookMoves(pieceTeam, pieceX, pieceY, board) {
+function _rookMoves(pieceX, pieceY, board) {
   let moves = [];
-  for (let i = 0; i < 8; i++) {
-    _addIfMoveOnBoard(i, pieceY, pieceX, pieceY, moves);
-    _addIfMoveOnBoard(pieceX, i, pieceX, pieceY, moves);
+  let collisionUp = false;
+  let collisionLeft = false;
+  let collisionDown = false;
+  let collisionRight = false;
+  // up
+  let step = pieceY - 1;
+  while (step > 0 && !(collisionUp)) {
+    collisionUp = _checkCollision(pieceX, step, pieceX, pieceY, moves, board);
+    step--;
+  }
+  // left
+  step = pieceX - 1;
+  while (step > 0 && !(collisionLeft)) {
+    collisionLeft = _checkCollision(step, pieceY, pieceX, pieceY, moves, board);
+    step--;
+  }
+  // down
+  step = pieceY + 1;
+  while (step < 7 && !(collisionLeft)) {
+    collisionLeft = _checkCollision(pieceX, step, pieceX, pieceY, moves, board);
+    step++;
+  }
+  // right
+  step = pieceX + 1;
+  while (step < 7 && !(collisionLeft)) {
+    collisionLeft = _checkCollision(step, pieceY, pieceX, pieceY, moves, board);
+    step++;
   }
   return moves;
 }
 
-function _knightMoves(pieceTeam, pieceX, pieceY, board) {
+function _knightMoves(pieceX, pieceY, board) {
   let moves = [];
   let one = 1;
   let two = 2;
@@ -95,58 +123,108 @@ function _knightMoves(pieceTeam, pieceX, pieceY, board) {
     if (i > 2) {
       two = -2;
     }
-    _addIfMoveOnBoard(pieceX + one, pieceY + two, pieceX, pieceY, moves);
-    _addIfMoveOnBoard(pieceX + two, pieceY + one, pieceX, pieceY, moves);
+    _checkCollision(pieceX + one, pieceY + two, pieceX, pieceY, moves, board);
+    _checkCollision(pieceX + two, pieceY + one, pieceX, pieceY, moves, board);
   }
   return moves;
 }
 
-function _bishopMoves(pieceTeam, pieceX, pieceY, board) {
+function _bishopMoves(pieceX, pieceY, board) {
   let moves = [];
   let right = 7 - pieceX;
   let left = pieceX;
   let step = 0;
-  while (left > 0) {
+  let collisionNW = false;
+  let collisionSW = false;
+  let collisionNE = false;
+  let collisionSE = false;
+  while (left > 0 || (collisionNW && collisionSW)) {
     left--;
     step++;
     // NW diagonal
-    _addIfMoveOnBoard(pieceX - step, pieceY - step, pieceX, pieceY, moves);
+    if (!collisionNW) {
+      collisionNW = _checkCollision(pieceX - step, pieceY - step, pieceX, pieceY, moves, board);
+    }
     // SW diagonal
-    _addIfMoveOnBoard(pieceX - step, pieceY + step, pieceX, pieceY, moves);
+    if (!collisionSW) {
+      collisionSW = _checkCollision(pieceX - step, pieceY + step, pieceX, pieceY, moves, board);
+    }
   }
   step = 0;
-  while (right > 0) {
+  while (right > 0 || (collisionNE && collisionSE)) {
     right--;
     step++;
     // NE diagonal
-    _addIfMoveOnBoard(pieceX + step, pieceY - step, pieceX, pieceY, moves);
+    if (!collisionNE) {
+      collisionNE = _checkCollision(pieceX + step, pieceY - step, pieceX, pieceY, moves, board);
+    }
     // SE diagonal
-    _addIfMoveOnBoard(pieceX + step, pieceY + step, pieceX, pieceY, moves);
+    if (!collisionSE) {
+      collisionSE = _checkCollision(pieceX + step, pieceY + step, pieceX, pieceY, moves, board);
+    }
   }
   return moves;
 }
 
-function _queenMoves(pieceTeam, pieceX, pieceY, board) {
-  let moves = _rookMoves(pieceTeam, pieceX, pieceY, board);
-  moves = moves.concat(_bishopMoves(pieceTeam, pieceX, pieceY, board));
+function _queenMoves(pieceX, pieceY, board) {
+  let moves = _rookMoves(pieceX, pieceY, board);
+  moves = moves.concat(_bishopMoves(pieceX, pieceY, board));
   return moves;
 }
 
 // @TODO: ADD king/rook swap
-function _kingMoves(pieceTeam, pieceX, pieceY, board) {
+function _kingMoves(pieceX, pieceY, board) {
   let moves = [];
   for (let i = pieceX - 1; i <= pieceX + 1; i++) {
     for (let j = pieceY - 1; j <= pieceY + 1; j++) {
-      _addIfMoveOnBoard(i, j, pieceX, pieceY, moves);
+      _checkCollision(i, j, pieceX, pieceY, moves, board);
     }
   }
   return moves;
 }
 
-function _addIfMoveOnBoard(x, y, pieceX, pieceY, moves) {
-  if ((x >= 0 && x <= 7) && (y >= 0 && y <= 7)) {
-    if (x != pieceX || y != pieceY) {
-      moves.push({ x: x, y: y });
+function _checkCollision(targetX, targetY, pieceX, pieceY, moves, board) {
+  if (_getPieceTeam(targetX, targetY, board) === undefined) {
+    _addIfMoveOnBoard(targetX, targetY, moves);
+    return false;
+  } else {
+    if (_getPlayerPiece(targetX, targetY, board) === undefined) {
+      if (_getPieceTeam(pieceX, pieceY, board) === _getPieceTeam(targetX, targetY, board)) {
+        _addIfMoveOnBoard(targetX, targetY, moves);
+        return false;
+      } else {
+        _addIfMoveOnBoard(targetX, targetY, moves);
+        return true;
+      }
+    } else {
+      return true;
     }
   }
+}
+
+function _addIfMoveOnBoard(x, y, moves) {
+  if (_onBoard(x, y)) {
+      moves.push({ x: x, y: y });
+  }
+}
+
+function _getPieceTeam(pieceX, pieceY, board) {
+  if (_onBoard(pieceX, pieceY)) {
+    return board[pieceY][pieceX].team;
+  }
+  return undefined;
+}
+
+function _getPlayerPiece(pieceX, pieceY, board) {
+  if (_onBoard(pieceX, pieceY)) {
+    return board[pieceY][pieceX].playerPiece;
+  }
+  return undefined;
+}
+
+function _onBoard(x, y) {
+  if ((x >= 0 && x <= 7) && (y >= 0 && y <= 7)) {
+    return true;
+  }
+  return false;
 }
