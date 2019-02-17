@@ -49,13 +49,13 @@ function* _loseGame() {
 function* _endTurn() {
   yield call(_callEndTurn);
   yield put(Actions.endTurn.success());
-  yield put(Actions.beginCrafting.request());
+  yield put(Actions.beginTurn.request());
 }
 
 function _callEndTurn() {
   const state = localStore.getState();
   let turn = GameSelector.getPendingTurn(state);
-  return GameInterface.endTurn(turn);
+  return GameInterface.endTurn(PLAYER_ID, turn);
 }
 
 export default function* root() {

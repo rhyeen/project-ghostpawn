@@ -29,3 +29,10 @@ export const setReducedBoard = (reducedBoard) => _action(SET_REDUCED_BOARD, {red
 
 export const SET_PLAYER_PIECES =  _createRequestRaw('SET_PLAYER_PIECES');
 export const setPlayerPieces = (playerPieces) => _action(SET_PLAYER_PIECES, {playerPieces});
+
+
+export const MOVE_PLAYER_PIECE = _createRequestTypes('MOVE_PLAYER_PIECE');
+export const movePlayerPiece = {
+  request: (currentY, currentX, newY, newX) => _action(MOVE_PLAYER_PIECE.REQUEST, {currentY, currentX, newY, newX}),
+  success: (playerPieces, reducedBoard) => _action(MOVE_PLAYER_PIECE.SUCCESS, {playerPieces, reducedBoard})
+};

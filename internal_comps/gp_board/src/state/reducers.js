@@ -36,6 +36,9 @@ export const gp_board = (state = INITIAL_STATE, action) => {
       return _setReducedBoard(state, action.reducedBoard);
     case ActionType.SET_PLAYER_PIECES:
       return _setPlayerPieces(state, action.playerPieces);
+    case ActionType.MOVE_PLAYER_PIECE.SUCCESS:
+      state = _setPlayerPieces(state, action.playerPieces);
+      return _setReducedBoard(state, action.reducedBoard);
     default:
       return state;
   }

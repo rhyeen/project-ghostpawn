@@ -19,6 +19,10 @@ export function isPlayerCodeWhiteTeam(playerCode) {
   return playerCode.startsWith(GAME_KEYWORDS.WHITE_TEAM_CODE);
 }
 
+export function getPlayerCodeTeam(playerCode) {
+  return isPlayerCodeWhiteTeam(playerCode) ? GAME_KEYWORDS.WHITE_TEAM : GAME_KEYWORDS.BLACK_TEAM;
+}
+
 export function isPlayerCodeBlackTeam(playerCode) {
   return playerCode.startsWith(GAME_KEYWORDS.BLACK_TEAM_CODE);
 }

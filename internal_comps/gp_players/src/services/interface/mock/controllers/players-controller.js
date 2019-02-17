@@ -38,7 +38,7 @@ export const syncPiecesToPlayers = () => {
 };
 
 export const getPlayerPieces = (playerId) => {
-  let playerCode = _getPlayerCode(playerId);
+  let playerCode = getPlayerCode(playerId);
   if (isPlayerCodeWhiteTeam(playerCode)) {
     return _deepCopy(Model.teams.white[playerCode].pieces);
   } else {
@@ -46,7 +46,7 @@ export const getPlayerPieces = (playerId) => {
   }
 };
 
-function _getPlayerCode(playerId) {
+export function getPlayerCode(playerId) {
   return Model.players[playerId].playerCode;
 }
 
