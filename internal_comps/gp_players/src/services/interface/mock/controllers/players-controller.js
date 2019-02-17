@@ -47,6 +47,10 @@ export const getPlayerPieces = (playerId) => {
 };
 
 export function getPlayerCode(playerId) {
+  if (!(playerId in Model.players)) {
+    // this means the playerId is the playerCode;
+    return playerId;
+  }
   return Model.players[playerId].playerCode;
 }
 
