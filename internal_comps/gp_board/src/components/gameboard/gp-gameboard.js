@@ -5,6 +5,8 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import './gp-board-cell.js';
 
+import { movePlayerPiece } from '../../state/actions.js';
+
 import * as BoardSelector from '../../state/selectors.js';
 import { getCombinedBoard } from '../../services/board-manipulator.js';
 import { getValidMoves } from '../../services/move-validator.js';
@@ -54,13 +56,15 @@ export class GpGameboard extends connect(localStore)(LitElement) {
 
   _handleCellClick(cell, y, x) {
     if (!cell.playerPiece) {
+      if (this._selectedCell.playerPiece && this._isInValidMoves(y, x)) {
+        localStore.dispatch(movePlayerPiece.request(this._selectedCell.y, this._selectedCell.x, y, x));
+      }
       this._selectedCell = {};
       this._validMoves = [];
       return;
     }
-    this._selectedCell = { x, y };
-    // @DEBUG: get player team dynamically.
-    this._validMoves = getValidMoves(GAME_KEYWORDS.WHITE_TEAM, cell.playerPiece, x, y, this._combinedBoard);
+    this._selectedCell = { x, y, playerPiece: cell.playerPiece };
+    this._validMoves = getValidMoves(cell.playerPiece, x, y, this._combinedBoard);
   }
 
   _isSelected(y, x) {

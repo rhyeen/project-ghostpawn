@@ -15,10 +15,12 @@ export const beginGame = (playerId) => {
   });
 };
 
-export const endTurn = (turn) => {
+export const endTurn = (playerId, turn) => {
   return new Promise((resolve) => {
-    Mock.debugRequest(endTurn);
-    GameController.executePlayTurn(turn);
+    Mock.debugRequest(endTurn, {playerId, turn});
+    GameController.executePlayTurn(playerId, turn);
+    GameController.executeWhiteTeamsTurn();
+    GameController.executeBlackTeamsTurn();
     setTimeout(() => {
       Mock.debugSuccessfulResponse(endTurn);
       resolve();

@@ -37,10 +37,35 @@ function _gameIsWon() {
   return false;
 }
 
-export const executePlayTurn = (turn) => {
-  let validTurn = TurnActionController.isValidTurn(turn);
+export const executePlayTurn = (playerId, turn) => {
+  let validTurn = TurnActionController.isValidTurn(playerId, turn);
   if (validTurn) {
-    TurnActionController.executeTurnActions(turn);
+    TurnActionController.executeTurnActions(playerId, turn);
     recordPlayerTurn(turn);
   }
+  PlayersController.syncPiecesToPlayers();
 };
+
+export const executeWhiteTeamsTurn = () => {
+  let teamsTurn = _getWhiteTeamsTurn();
+  for (let playersTurn of teamsTurn) {
+    executePlayTurn(playersTurn.playerId, playersTurn.turn);
+  }
+};
+
+export const executeBlackTeamsTurn = () => {
+  let teamsTurn = _getBlackTeamsTurn();
+  for (let playersTurn of teamsTurn) {
+    executePlayTurn(playersTurn.playerId, playersTurn.turn);
+  }
+};
+
+function _getWhiteTeamsTurn() {
+  // @TODO:
+  return [];
+}
+
+function _getBlackTeamsTurn() {
+  // @TODO:
+  return [];
+}

@@ -17,12 +17,12 @@ export const beginGame = (playerId) => {
   }
 };
 
-export const endTurn = (turn) => {
+export const endTurn = (playerId, turn) => {
   switch (interfaceState()) {
     case INTERFACE.HTTP:
-      return CallHttp.endTurn(turn);
+      return CallHttp.endTurn(playerId, turn);
     case INTERFACE.MOCK:
-      return CallMock.endTurn(turn);
+      return CallMock.endTurn(playerId, turn);
     default:
       return invalidInterfaceState();
   }
