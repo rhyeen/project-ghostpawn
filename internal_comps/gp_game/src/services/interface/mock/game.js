@@ -3,6 +3,7 @@ import {
   CALLBACK_TIME } from '../../../../../gp_shared/src/services/mock.js';
 
 import * as GameController from './controllers/game-controller.js';
+import { GAME_KEYWORDS } from '../../../entities/game-keywords.js';
 
 export const beginGame = (playerId) => {
   return new Promise((resolve) => {
@@ -19,8 +20,8 @@ export const endTurn = (playerId, turn) => {
   return new Promise((resolve) => {
     Mock.debugRequest(endTurn, {playerId, turn});
     GameController.executePlayTurn(playerId, turn);
-    GameController.executeWhiteTeamsTurn();
-    GameController.executeBlackTeamsTurn();
+    GameController.executeTeamsTurn(GAME_KEYWORDS.WHITE_TEAM);
+    GameController.executeTeamsTurn(GAME_KEYWORDS.BLACK_TEAM);
     setTimeout(() => {
       Mock.debugSuccessfulResponse(endTurn);
       resolve();
