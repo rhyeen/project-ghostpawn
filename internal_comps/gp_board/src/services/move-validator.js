@@ -24,7 +24,6 @@ import { GAME_KEYWORDS } from "../../../gp_game/src/entities/game-keywords";
     ...
   ]
 */
-// @TODO: ADD stop when hits piece
 export function getValidMoves(pieceType, pieceX, pieceY, board) {
   switch(pieceType) {
     case GAME_KEYWORDS.PAWN:
@@ -45,35 +44,52 @@ export function getValidMoves(pieceType, pieceX, pieceY, board) {
 function _pawnMoves(pieceX, pieceY, board) {
   let moves = [];
   if (getCellTeam(pieceX, pieceY, board) === GAME_KEYWORDS.WHITE_TEAM) {
-    _checkCollision(pieceX, pieceY - 1, pieceX, pieceY, moves, board);
+    _checkPawnCollision(pieceX, pieceY - 1, pieceX, pieceY, moves, board);
     if (pieceY === 6) {
-      moves.push({ x: pieceX, y: pieceY - 2 });
+      _checkPawnCollision(pieceX, pieceY - 2, pieceX, pieceY, moves, board);
     }
   } else {
-    _checkCollision(pieceX, pieceY + 1, pieceX, pieceY, moves, board);
+    _checkPawnCollision(pieceX, pieceY + 1, pieceX, pieceY, moves, board);
     if (pieceY === 1) {
-      moves.push({ x: pieceX, y: pieceY + 2 });
+      _checkPawnCollision(pieceX, pieceY + 2, pieceX, pieceY, moves, board);
     }
   }
   _pawnAttack(pieceX, pieceY, moves, board);
   return moves;
 }
 
-// @TODO TEST
 function _pawnAttack(pieceX, pieceY, moves, board) {
   if (getCellTeam(pieceX, pieceY, board) === GAME_KEYWORDS.WHITE_TEAM) {
     if (getCellTeam(pieceX - 1, pieceY - 1, board) === GAME_KEYWORDS.BLACK_TEAM) {
-      _addIfMoveOnBoard(pieceX - 1, pieceY - 1, board);
+      _addIfMoveOnBoard(pieceX - 1, pieceY - 1, moves);
     }
     if (getCellTeam(pieceX + 1, pieceY - 1, board) === GAME_KEYWORDS.BLACK_TEAM) {
-      _addIfMoveOnBoard(pieceX + 1, pieceY + 1, board);
+      _addIfMoveOnBoard(pieceX + 1, pieceY - 1, moves);
     }
   } else {
     if (getCellTeam(pieceX - 1, pieceY + 1, board) === GAME_KEYWORDS.WHITE_TEAM) {
-      _addIfMoveOnBoard(pieceX - 1, pieceY + 1, board);
+      _addIfMoveOnBoard(pieceX - 1, pieceY + 1, moves);
     }
     if (getCellTeam(pieceX + 1, pieceY + 1, board) === GAME_KEYWORDS.WHITE_TEAM) {
-      _addIfMoveOnBoard(pieceX + 1, pieceY + 1, board);
+      _addIfMoveOnBoard(pieceX + 1, pieceY + 1, moves);
+    }
+  }
+}
+
+function _checkPawnCollision(targetX, targetY, pieceX, pieceY, moves, board) {
+  if (!getCellTeam(targetX, targetY, board)) {
+    _addIfMoveOnBoard(targetX, targetY, moves);
+    return false;
+  } else {
+    if (!_getPlayerPiece(targetX, targetY, board)) {
+      if (getCellTeam(pieceX, pieceY, board) === getCellTeam(targetX, targetY, board)) {
+        _addIfMoveOnBoard(targetX, targetY, moves);
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
     }
   }
 }
@@ -86,26 +102,26 @@ function _rookMoves(pieceX, pieceY, board) {
   let collisionRight = false;
   // up
   let step = pieceY - 1;
-  while (step > 0 && !(collisionUp)) {
+  while (step >= 0 && !(collisionUp)) {
     collisionUp = _checkCollision(pieceX, step, pieceX, pieceY, moves, board);
     step--;
   }
   // left
   step = pieceX - 1;
-  while (step > 0 && !(collisionLeft)) {
+  while (step >= 0 && !(collisionLeft)) {
     collisionLeft = _checkCollision(step, pieceY, pieceX, pieceY, moves, board);
     step--;
   }
   // down
   step = pieceY + 1;
-  while (step < 7 && !(collisionLeft)) {
-    collisionLeft = _checkCollision(pieceX, step, pieceX, pieceY, moves, board);
+  while (step <= 7 && !(collisionDown)) {
+    collisionDown = _checkCollision(pieceX, step, pieceX, pieceY, moves, board);
     step++;
   }
   // right
   step = pieceX + 1;
-  while (step < 7 && !(collisionLeft)) {
-    collisionLeft = _checkCollision(step, pieceY, pieceX, pieceY, moves, board);
+  while (step <= 7 && !(collisionRight)) {
+    collisionRight = _checkCollision(step, pieceY, pieceX, pieceY, moves, board);
     step++;
   }
   return moves;
@@ -135,7 +151,7 @@ function _bishopMoves(pieceX, pieceY, board) {
   let collisionSW = false;
   let collisionNE = false;
   let collisionSE = false;
-  while (left > 0 || (collisionNW && collisionSW)) {
+  while (left > 0 && !(collisionNW && collisionSW)) {
     left--;
     step++;
     // NW diagonal
@@ -148,7 +164,7 @@ function _bishopMoves(pieceX, pieceY, board) {
     }
   }
   step = 0;
-  while (right > 0 || (collisionNE && collisionSE)) {
+  while (right > 0 && !(collisionNE && collisionSE)) {
     right--;
     step++;
     // NE diagonal
@@ -182,13 +198,11 @@ function _kingMoves(pieceX, pieceY, board) {
 
 function _checkCollision(targetX, targetY, pieceX, pieceY, moves, board) {
   if (!getCellTeam(targetX, targetY, board)) {
-    _addIfMoveOnBoard(targetX, targetY, moves);
-    return false;
+    return false || !_addIfMoveOnBoard(targetX, targetY, moves);
   } else {
     if (!_getPlayerPiece(targetX, targetY, board)) {
       if (getCellTeam(pieceX, pieceY, board) === getCellTeam(targetX, targetY, board)) {
-        _addIfMoveOnBoard(targetX, targetY, moves);
-        return false;
+        return false || !_addIfMoveOnBoard(targetX, targetY, moves);
       } else {
         _addIfMoveOnBoard(targetX, targetY, moves);
         return true;
@@ -202,7 +216,9 @@ function _checkCollision(targetX, targetY, pieceX, pieceY, moves, board) {
 function _addIfMoveOnBoard(x, y, moves) {
   if (_onBoard(x, y)) {
       moves.push({ x, y });
+      return true;
   }
+  return false;
 }
 
 export function getCellTeam(x, y, board) {
@@ -216,7 +232,7 @@ function _getPlayerPiece(pieceX, pieceY, board) {
   if (_onBoard(pieceX, pieceY)) {
     return board[pieceY][pieceX].playerPiece;
   }
-  return undefined;
+  return null;
 }
 
 function _onBoard(x, y) {
