@@ -24,8 +24,8 @@ import { GAME_KEYWORDS } from "../../../gp_game/src/entities/game-keywords";
     ...
   ]
 */
-export function getValidMoves(pieceType, pieceX, pieceY, board) {
-  switch(pieceType) {
+export function getValidMoves(pieceX, pieceY, board) {
+  switch(_getPieceType(pieceX, pieceY, board)) {
     case GAME_KEYWORDS.PAWN:
       return _pawnMoves(pieceX, pieceY, board);
     case GAME_KEYWORDS.ROOK:
@@ -226,6 +226,10 @@ export function getCellTeam(x, y, board) {
     return board[y][x].team;
   }
   return null;
+}
+
+function _getPieceType(pieceX, pieceY, board) {
+  return board[pieceY][pieceX].playerPiece;
 }
 
 function _getPlayerPiece(pieceX, pieceY, board) {

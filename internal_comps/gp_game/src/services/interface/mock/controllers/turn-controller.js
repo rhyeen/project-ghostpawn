@@ -1,5 +1,6 @@
 import { getReducedBoard } from '../../../../../../gp_board/src/services/interface/mock/controllers/board-controller.js';
 import { GAME_KEYWORDS } from '../../../../entities/game-keywords.js';
+import { getValidMoves} from '../../../../../../gp_board/src/services/move-validator';
 
 /**
  * 
@@ -27,8 +28,9 @@ import { GAME_KEYWORDS } from '../../../../entities/game-keywords.js';
  * 
  */
 export function getPlayersRandomTurn(playerCode, playerPieces) {
-  // same board as the one passed into getValidMoves.
   let board = getReducedBoard();
+  debugger;
+  let playerPiece = _getRandomPieceWithMove(playerPieces, board);
   // The following return values are the ones that need to be altered:
   // turn[0].playerPiece.x, turn[0].playerPiece.y, turn[0].movePlayerPiece.x, turn[0].movePlayerPiece.x
   return { 
@@ -47,4 +49,12 @@ export function getPlayersRandomTurn(playerCode, playerPieces) {
       }
     ]
   };
+}
+
+function _getRandomPieceWithMove(playerPieces, board) {
+  let rand = Math.floor(Math.random() * playerPieces.length);
+  for (let i = 0; i < playerPieces.length; i++) {
+    pieceType = playerPieces[(rand + i) % playerPieces.length];
+    
+  }
 }
