@@ -64,7 +64,7 @@ export class GpGameboard extends connect(localStore)(LitElement) {
       return;
     }
     this._selectedCell = { x, y, playerPiece: cell.playerPiece };
-    this._validMoves = getValidMoves(cell.playerPiece, x, y, this._combinedBoard);
+    this._validMoves = getValidMoves(x, y, this._combinedBoard);
   }
 
   _isSelected(y, x) {
