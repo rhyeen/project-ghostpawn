@@ -43,14 +43,15 @@ export function getValidMoves(pieceType, pieceX, pieceY, board) {
 
 function _pawnMoves(pieceX, pieceY, board) {
   let moves = [];
+  let collisionFirst = false;
   if (getCellTeam(pieceX, pieceY, board) === GAME_KEYWORDS.WHITE_TEAM) {
-    _checkPawnCollision(pieceX, pieceY - 1, pieceX, pieceY, moves, board);
-    if (pieceY === 6) {
+    collisionFirst = _checkPawnCollision(pieceX, pieceY - 1, pieceX, pieceY, moves, board);
+    if (pieceY === 6 && !collisionFirst) {
       _checkPawnCollision(pieceX, pieceY - 2, pieceX, pieceY, moves, board);
     }
   } else {
-    _checkPawnCollision(pieceX, pieceY + 1, pieceX, pieceY, moves, board);
-    if (pieceY === 1) {
+    collisionFirst = _checkPawnCollision(pieceX, pieceY + 1, pieceX, pieceY, moves, board);
+    if (pieceY === 1 && !collisionFirst) {
       _checkPawnCollision(pieceX, pieceY + 2, pieceX, pieceY, moves, board);
     }
   }
